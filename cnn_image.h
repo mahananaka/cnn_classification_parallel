@@ -1,3 +1,6 @@
+#ifndef CNN_IMAGE_H
+#define CNN_IMAGE_H
+
 #include <cstring>
 
 #define HEIGHT 32
@@ -21,3 +24,5 @@ class CnnImage {
 		~CnnImage() {}
 
 };
+
+#endif

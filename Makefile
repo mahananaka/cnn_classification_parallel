@@ -6,8 +6,8 @@ ICCFLAGS= -g -ltbb -std=c++11
 
 all: main
 
-main : main.o
-	$(CC) -o $@ $(CXXFLAGS) main.o
+main : main.o loader.o
+	$(CC) -o $@ $(CXXFLAGS) main.o loader.o
 
 clean:
 	rm -f *.o main
