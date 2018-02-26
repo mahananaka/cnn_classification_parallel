@@ -12,6 +12,7 @@ typedef std::chrono::high_resolution_clock Clock;
 int main(int argc, char** argv){
 	std::vector<CnnImage*> images;
 
+	std::cout << "loading cifar images..." << std::endl;
 	load_cifar(images,INPUTFILE,IMG_SIZE,NUM_IMAGES);
 
 	int count = images.size();
