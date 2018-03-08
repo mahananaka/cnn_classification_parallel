@@ -14,6 +14,9 @@
 void load_cifar(FOURD_VECTOR(int) &images, std::vector<int> &labels, 
 		const std::vector<std::string> &batches, const int num_images_per_batch, const int max_num_images);
 
+void alt_load_cifar(FOURD_VECTOR(int) &images, std::string path, const int num_images_per_batch, 
+		const int max_num_images);
+
 void format_data(THREED_VECTOR(int) &img, const unsigned char *d);
 
 #endif

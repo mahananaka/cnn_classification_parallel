@@ -38,6 +38,24 @@ void  load_cifar(FOURD_VECTOR(int) &images, std::vector<int> &labels,
 	}
 }
 
+void  alt_load_cifar(FOURD_VECTOR(int) &images, std::string path, const int num_images_per_batch, const int max_num_images){
+	std::ifstream file;
+        std::cout << "Loading " << path << std::endl;
+	int offset = images.size();
+	images.resize(images.size()+num_images_per_batch);
+        file.open(path.c_str(), std::ios::binary);
+        if(file.is_open()){
+		unsigned char label = 0;
+		unsigned char temp[3072];
+		for(int j=0;j<num_images_per_batch;++j){
+			file.read((char *)&label, sizeof(label));
+			file.read((char *)temp,sizeof(unsigned char)*NUM_BYTES_PER_IMAGE);
+			format_data(images[offset+j],temp);
+		}
+	}
+	file.close();
+}
+
 void format_data(THREED_VECTOR(int) &img, const unsigned char *d) {
 	img.resize(IMG_SPECTRUM);
 
