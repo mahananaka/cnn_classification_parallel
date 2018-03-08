@@ -6,7 +6,7 @@
 #define NUM_IMAGES_PER_BATCH 10000
 
 void  load_cifar(FOURD_VECTOR(int) &images, std::vector<int> &labels, 
-		const std::vector<std::string> &batches, const int max_num_images){
+		const std::vector<std::string> &batches, const int num_images_per_batch, const int max_num_images){
 	
 	std::string line;
 	std::ifstream file;
@@ -19,7 +19,7 @@ void  load_cifar(FOURD_VECTOR(int) &images, std::vector<int> &labels,
 		if(file.is_open()){
 			unsigned char label = 0, temp = 0;
 			std::vector<unsigned char> img;
-			for(int j=0;j<NUM_IMAGES_PER_BATCH;++j){
+			for(int j=0;j<num_images_per_batch;++j){
 				file.read((char *)&label, sizeof(label));
 				labels.push_back(static_cast<int>(label));
 				for(int k=0;k<NUM_BYTES_PER_IMAGE;++k){
@@ -27,8 +27,8 @@ void  load_cifar(FOURD_VECTOR(int) &images, std::vector<int> &labels,
 					img.push_back(temp);
 				}
 
-				format_data(images[i*NUM_IMAGES_PER_BATCH+j],img.data());
-				if(i*NUM_IMAGES_PER_BATCH+j>=max_num_images-1){
+				format_data(images[i*num_images_per_batch+j],img.data());
+				if(i*num_images_per_batch+j>=max_num_images-1){
 					file.close();
 					return;
 				}

@@ -1,14 +1,17 @@
+#include <chrono>
 #include <iostream>
 #include <vector>
-
 #include "loader.h"
 
-#define MAX_LOAD_TRAINER_IMAGES 50000
+#define MAX_LOAD_TRAINER_IMAGES 10000
 #define MAX_LOAD_TEST_IMAGES 10000
 
-std::vector<std::string> trainer_paths { "./data/data_batch_1.bin", 
-	"./data/data_batch_2.bin", "./data/data_batch_3.bin", 
-	"./data/data_batch_4.bin", "./data/data_batch_5.bin" };
+typedef std::chrono::high_resolution_clock Clock;
+
+std::vector<std::string> trainer_paths { "./data/data_batch_1.bin" };
+std::vector<std::string> trainer_paths2 { "./data/data_batch_1a.bin","./data/data_batch_1b.bin",
+	"./data/data_batch_1c.bin","./data/data_batch_1d.bin","./data/data_batch_1e.bin","./data/data_batch_1f.bin",
+	"./data/data_batch_1g.bin","./data/data_batch_1h.bin","./data/data_batch_1i.bin","./data/data_batch_1j.bin"};
 std::vector<std::string> test_paths { "./data/test_batch.bin" };
 
 int main (int argc, char** argv)
@@ -16,16 +19,73 @@ int main (int argc, char** argv)
 //Statement to let us know the main started
 std::cout << "Running program"<<std::endl;
 
-std::vector<int> trainer_labels, test_labels;
-FOURD_VECTOR(int) trainer_images, test_images;
+std::vector<int> trainer_labels, trainer_labels2, test_labels;
+FOURD_VECTOR(int) trainer_images, trainer_images2, test_images;
 
 std::cout << "Loading cifar batches:" << std::endl;
 
-load_cifar(trainer_images, trainer_labels, trainer_paths, MAX_LOAD_TRAINER_IMAGES);
+auto t1 = Clock::now();
+load_cifar(trainer_images, trainer_labels, trainer_paths, 10000, MAX_LOAD_TRAINER_IMAGES);
 //load_cifar(test_images, test_labels, test_paths, MAX_LOAD_TEST_IMAGES);
+auto t2 = Clock::now();
+
+auto t = std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count();
+std::cout << "Loaded into 4d vector in " << t << " ms" << std::endl;
+
+load_cifar(trainer_images2, trainer_labels2, trainer_paths2, 1000, MAX_LOAD_TRAINER_IMAGES);
+for(int i=0;i<10000;++i){
+	for(int j=0;j<3;++j){
+		for(int k=0;k<32;++k){
+			for(int l=0;l<32;++l){
+				if(trainer_images[i][j][k][l] == trainer_images2[i][j][k][l]){
+					//do nothing
+				}else{
+					std::cout << "problem @ ["<<i<<"]["<<j<<"]["<<k<<"]["<<l<<"]"<<std::endl;
+					std::cout <<  trainer_images[i][j][k][l] <<","<< trainer_images[i][j][k][l+1] 
+							<<","<< trainer_images[i][j][k][l+2] <<","<< trainer_images[i][j][k][l+3]
+							<<","<< trainer_images[i][j][k][l+4] <<","<< trainer_images[i][j][k][l+5]
+							<<","<< trainer_images[i][j][k][l+6] <<","<< trainer_images[i][j][k][l+7]
+							<<","<< trainer_images[i][j][k][l+8] <<","<< trainer_images[i][j][k][l+9];
+					std::cout <<" : "<< trainer_images2[i][j][k][l] <<","<< trainer_images2[i][j][k][l+1] 
+							<<","<< trainer_images2[i][j][k][l+2] <<","<< trainer_images2[i][j][k][l+3]
+							<<","<< trainer_images2[i][j][k][l+4] <<","<< trainer_images2[i][j][k][l+5]
+							<<","<< trainer_images2[i][j][k][l+6] <<","<< trainer_images2[i][j][k][l+7]
+							<<","<< trainer_images2[i][j][k][l+8] <<","<< trainer_images2[i][j][k][l+9]
+							<< std::endl;
+							i++;
+					std::cout <<  trainer_images[i][j][k][l] <<","<< trainer_images[i][j][k][l+1] 
+							<<","<< trainer_images[i][j][k][l+2] <<","<< trainer_images[i][j][k][l+3]
+							<<","<< trainer_images[i][j][k][l+4] <<","<< trainer_images[i][j][k][l+5]
+							<<","<< trainer_images[i][j][k][l+6] <<","<< trainer_images[i][j][k][l+7]
+							<<","<< trainer_images[i][j][k][l+8] <<","<< trainer_images[i][j][k][l+9];
+					std::cout <<" : "<< trainer_images2[i][j][k][l] <<","<< trainer_images2[i][j][k][l+1] 
+							<<","<< trainer_images2[i][j][k][l+2] <<","<< trainer_images2[i][j][k][l+3]
+							<<","<< trainer_images2[i][j][k][l+4] <<","<< trainer_images2[i][j][k][l+5]
+							<<","<< trainer_images2[i][j][k][l+6] <<","<< trainer_images2[i][j][k][l+7]
+							<<","<< trainer_images2[i][j][k][l+8] <<","<< trainer_images2[i][j][k][l+9]
+							<< std::endl;
+							i++;
+					std::cout <<  trainer_images[i][j][k][l] <<","<< trainer_images[i][j][k][l+1] 
+							<<","<< trainer_images[i][j][k][l+2] <<","<< trainer_images[i][j][k][l+3]
+							<<","<< trainer_images[i][j][k][l+4] <<","<< trainer_images[i][j][k][l+5]
+							<<","<< trainer_images[i][j][k][l+6] <<","<< trainer_images[i][j][k][l+7]
+							<<","<< trainer_images[i][j][k][l+8] <<","<< trainer_images[i][j][k][l+9];
+					std::cout <<" : "<< trainer_images2[i][j][k][l] <<","<< trainer_images2[i][j][k][l+1] 
+							<<","<< trainer_images2[i][j][k][l+2] <<","<< trainer_images2[i][j][k][l+3]
+							<<","<< trainer_images2[i][j][k][l+4] <<","<< trainer_images2[i][j][k][l+5]
+							<<","<< trainer_images2[i][j][k][l+6] <<","<< trainer_images2[i][j][k][l+7]
+							<<","<< trainer_images2[i][j][k][l+8] <<","<< trainer_images2[i][j][k][l+9]
+							<< std::endl;
+					exit(-1);
+				}
+			}
+		}
+	}
+}
 
 std::cout << trainer_images.size() << " trainer images and " << test_images.size() << " test image have been loaded" << std::endl;
 
+std::cout << trainer_images2.size() << " trainer2 images and " << test_images.size() << " test image have been loaded" << std::endl;
 //std::vector<struct LayerAttribute> myLayers;
 
 //Fully connected layer (flattens and does NN output)

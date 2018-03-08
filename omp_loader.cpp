@@ -7,7 +7,7 @@
 #define NUM_IMAGES_PER_BATCH 10000
 
 void load_cifar(FOURD_VECTOR(int) &images, std::vector<int> &labels, 
-		const std::vector<std::string> &batches, const int max_num_images){
+		const std::vector<std::string> &batches, const int num_images_per_batch, const int max_num_images){
 	
 	int num_batches = batches.size();
 	std::ifstream file[num_batches];
