@@ -1,49 +1,46 @@
 #include <fstream>
-#include "loader.h"
 #include <iostream>
-#include <omp.h>
+#include <algorithm>
+#include "loader.h"
+#include "omp.h"
 
 #define NUM_BYTES_PER_IMAGE 3072
-#define NUM_IMAGES_PER_BATCH 10000
 
-void load_cifar(FOURD_VECTOR(int) &images, std::vector<int> &labels, 
-		const std::vector<std::string> &batches, const int num_images_per_batch, const int max_num_images){
-	
-	int num_batches = batches.size();
-	std::ifstream file[num_batches];
-	images.resize(max_num_images);
-	labels.resize(max_num_images);
+void  load_cifar(FOURD_VECTOR(int) &images, std::vector<int> &labels, std::vector<std::string> &paths,
+		const int num_images_per_batch, const int max_num_images){
 
-	#pragma omp parallel for shared(batches,images,file) num_threads(num_batches)
-	for(int i=0;i<num_batches;++i){
-		std::cout << "Loading " << batches[i] << std::endl;
-		file[i].open(batches[i].c_str(), std::ios::binary);
-		if(file[i].is_open()){
-			unsigned char label = 0, temp = 0;
-			std::vector<unsigned char> img;
-			for(int j=0;j<NUM_IMAGES_PER_BATCH;++j){
-				file[i].read((char *)&label, sizeof(label));
-				labels[i*NUM_IMAGES_PER_BATCH+j] = static_cast<int>(label);
-				for(int k=0;k<NUM_BYTES_PER_IMAGE;++k){
-					file[i].read((char *)&temp, sizeof(temp));
-					img.push_back(temp);
+	int num_paths = static_cast<int>(paths.size());
+	int capacity = std::min(max_num_images,num_images_per_batch*num_paths);
+	images.resize(capacity);
+	labels.resize(capacity);
+
+	std::ifstream files[num_paths];
+
+	#pragma omp parallel for shared(files,images,labels,num_paths,capacity) num_threads(num_paths)
+	for(int i=0;i<num_paths;++i){
+		int offset = i*num_images_per_batch;
+        	files[i].open(paths[i].c_str(), std::ios::binary);
+	        if(files[i].is_open()){
+			unsigned char lbl = 0;
+			unsigned char temp[NUM_BYTES_PER_IMAGE];
+			for(int j=0;j<num_images_per_batch;++j){
+				if(offset+j<capacity){
+					files[i].read((char *)&lbl, sizeof(lbl));
+					files[i].read((char *)temp,sizeof(unsigned char)*NUM_BYTES_PER_IMAGE);
+					format_data(images[offset+j],temp);
+					labels[offset+j] = static_cast<int>(lbl);
+				}else{
+					break;
 				}
-
-				format_data(images[i*NUM_IMAGES_PER_BATCH+j],img.data());
-				//if(i*NUM_IMAGES_PER_BATCH+j>=max_num_images-1){
-				//	file.close();
-				//	return;
-				//}
 			}
 		}
-		file[i].close();
+		files[i].close();
 	}
 }
 
 void format_data(THREED_VECTOR(int) &img, const unsigned char *d) {
 	img.resize(IMG_SPECTRUM);
 
-	#pragma omp parallel for shared(img)
 	for(int i=0;i<IMG_SPECTRUM;++i){
         	img[i].resize(IMG_HEIGHT);
         	for(int j=0;j<IMG_HEIGHT;++j){
@@ -51,7 +48,6 @@ void format_data(THREED_VECTOR(int) &img, const unsigned char *d) {
 		}
 	}
 
-	#pragma omp parallel for shared(img)
 	for(int i=0;i<IMG_SPECTRUM;++i){
 		for(int j=0;j<IMG_HEIGHT;++j){
 			for(int k=0;k<IMG_WIDTH;++k){

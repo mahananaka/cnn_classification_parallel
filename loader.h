@@ -11,11 +11,8 @@
 #define THREED_VECTOR(t) std::vector<std::vector<std::vector<t>>>
 #define FOURD_VECTOR(t) std::vector<std::vector<std::vector<std::vector<t>>>>
 
-void load_cifar(FOURD_VECTOR(int) &images, std::vector<int> &labels, 
-		const std::vector<std::string> &batches, const int num_images_per_batch, const int max_num_images);
-
-void alt_load_cifar(FOURD_VECTOR(int) &images, std::string path, const int num_images_per_batch, 
-		const int max_num_images);
+void load_cifar(FOURD_VECTOR(int) &images, std::vector<int> &labels, std::vector<std::string> &paths,
+		const int num_images_per_batch, const int max_num_images);
 
 void format_data(THREED_VECTOR(int) &img, const unsigned char *d);
 
