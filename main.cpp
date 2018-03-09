@@ -5,7 +5,7 @@
 
 #define MAX_LOAD_TRAINER_IMAGES 50000
 #define MAX_LOAD_TEST_IMAGES 10000
-#define NUM_IMAGES_PER_BATCH 1000
+#define NUM_IMAGES_PER_BATCH 10000
 
 typedef std::chrono::high_resolution_clock Clock;
 
@@ -34,6 +34,13 @@ int main (int argc, char** argv)
 		"./data/test_batch_c.bin","./data/test_batch_d.bin","./data/test_batch_e.bin",
 		"./data/test_batch_f.bin","./data/test_batch_g.bin","./data/test_batch_h.bin",
        		"./data/test_batch_i.bin","./data/test_batch_j.bin" };
+	
+	/*
+	std::vector<std::string> trainer_paths { "./data/data_batch_1.bin", "./data/data_batch_2.bin",
+		"./data/data_batch_3.bin", "./data/data_batch_4.bin", "./data/data_batch_5.bin"};
+
+	std::vector<std::string> test_paths { "./data/test_batch.bin" };
+	*/
 
 	//Statement to let us know the main started
 	std::cout << "Running program"<<std::endl;

@@ -41,6 +41,7 @@ void  load_cifar(FOURD_VECTOR(int) &images, std::vector<int> &labels, std::vecto
 void format_data(THREED_VECTOR(int) &img, const unsigned char *d) {
 	img.resize(IMG_SPECTRUM);
 
+	#pragma omp parallel for shared(img,d)
 	for(int i=0;i<IMG_SPECTRUM;++i){
         	img[i].resize(IMG_HEIGHT);
         	for(int j=0;j<IMG_HEIGHT;++j){
@@ -48,6 +49,7 @@ void format_data(THREED_VECTOR(int) &img, const unsigned char *d) {
 		}
 	}
 
+	#pragma omp parallel for shared(img,d)
 	for(int i=0;i<IMG_SPECTRUM;++i){
 		for(int j=0;j<IMG_HEIGHT;++j){
 			for(int k=0;k<IMG_WIDTH;++k){
