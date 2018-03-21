@@ -5,7 +5,7 @@
 
 #define NUM_BYTES_PER_IMAGE 3072
 
-void  load_cifar(FOURD_VECTOR(int) &images, std::vector<int> &labels, std::vector<std::string> &paths,
+void  load_cifar(VECT4D(int) &images, std::vector<int> &labels, std::vector<std::string> &paths,
 		const int num_images_per_batch, const int max_num_images){
 
 	int capacity = std::min(max_num_images,num_images_per_batch*static_cast<int>(paths.size()));
@@ -35,7 +35,7 @@ void  load_cifar(FOURD_VECTOR(int) &images, std::vector<int> &labels, std::vecto
 	}
 }
 
-void format_data(THREED_VECTOR(int) &img, const unsigned char *d) {
+void format_data(VECT3D(int) &img, const unsigned char *d) {
 	img.resize(IMG_SPECTRUM);
 
 	for(int i=0;i<IMG_SPECTRUM;++i){

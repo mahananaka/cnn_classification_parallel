@@ -1,21 +1,22 @@
 #ifndef CNNLAYER_H_
 #define CNNLAYER_H_
 
-#include "cnn_helpers.h"
+#include "cnn_types.h"
 
 class CnnLayer {
-	private:
-		int i_height, i_width;
-		int o_height, o_width;
-		int kernal_size, num_kernals;
-		int stride;
-		int stored_input;
-		int stored_output;
+	protected:	
+		int in_depth, in_height, in_width;
+		int out_depth, out_height, out_width;
+		int kernal_size, num_kernals, stride;
+		VECT3D(int) stored_input;
+		VECT3D(int) stored_output;
 	public:
-		Layers(int ih, int iw, int oh, int ow, int ks, int nk, int s) : 
-			i_height(ih), i_width(iw), o_height(oh), o_width(ow), kernal_size(ks), num_kernals(nk), stride(s);
-		virtual VECT3D(int) ForwardPass(VECT3D(int)) = 0;
-		virtual VECT3D(int) BackPropagate() = 0;
+		CnnLayer(LayerAttrib &attrib);
+		~CnnLayer();
+		virtual void ForwardPass(VECT3D(int) &input) = 0;
+		virtual void BackPropagate(VECT3D(int) &deltas) = 0;
+		void print_layout();
+		void print_3d_vector(VECT3D(int) &A);
 };
 
 #endif
