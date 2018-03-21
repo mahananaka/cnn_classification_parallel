@@ -2,17 +2,20 @@
 #include <iostream>
 #include <vector>
 #include "loader.h"
+#include "CImg.h"
 
-#define MAX_LOAD_TRAINER_IMAGES 50000
-#define MAX_LOAD_TEST_IMAGES 10000
-#define NUM_IMAGES_PER_BATCH 10000
+#define MAX_LOAD_TRAINER_IMAGES 2200
+#define MAX_LOAD_TEST_IMAGES 1000
+#define NUM_IMAGES_PER_BATCH 1000
 
 typedef std::chrono::high_resolution_clock Clock;
 
+using namespace cimg_library;
 
 int main (int argc, char** argv)
 {
-	std::vector<std::string> trainer_paths { "./data/data_batch_1a.bin","./data/data_batch_1b.bin",
+	std::vector<std::string> trainer_paths { "./data/data_batch_1a.bin" };
+    /*,"./data/data_batch_1b.bin",
 		"./data/data_batch_1c.bin","./data/data_batch_1d.bin","./data/data_batch_1e.bin",
 		"./data/data_batch_1f.bin","./data/data_batch_1g.bin","./data/data_batch_1h.bin",
 		"./data/data_batch_1i.bin","./data/data_batch_1j.bin","./data/data_batch_2a.bin",
@@ -34,7 +37,7 @@ int main (int argc, char** argv)
 		"./data/test_batch_c.bin","./data/test_batch_d.bin","./data/test_batch_e.bin",
 		"./data/test_batch_f.bin","./data/test_batch_g.bin","./data/test_batch_h.bin",
        		"./data/test_batch_i.bin","./data/test_batch_j.bin" };
-	
+	*/
 	/*
 	std::vector<std::string> trainer_paths { "./data/data_batch_1.bin", "./data/data_batch_2.bin",
 		"./data/data_batch_3.bin", "./data/data_batch_4.bin", "./data/data_batch_5.bin"};
@@ -49,14 +52,17 @@ int main (int argc, char** argv)
 	FOURD_VECTOR(int) trainer_images, test_images;
 
 	std::cout << "Loading cifar:" << std::endl;
-	std::cout << "...trainer images" << std::endl;
+	std::cout << "...trainer images from" << std::endl;
 	auto t1 = Clock::now();
+	std::cout << trainer_paths[0] << std::endl;
 	load_cifar(trainer_images,trainer_labels,trainer_paths, NUM_IMAGES_PER_BATCH, MAX_LOAD_TRAINER_IMAGES);
 	auto t2 = Clock::now();
 
+    std::cout << std::endl << std::endl;
+    std::cout << trainer_images[0].data();
 	std::cout << "...test images" << std::endl;
 	auto t3 = Clock::now();
-	load_cifar(test_images,test_labels,test_paths, NUM_IMAGES_PER_BATCH, MAX_LOAD_TEST_IMAGES);
+	//load_cifar(test_images,test_labels,test_paths, NUM_IMAGES_PER_BATCH, MAX_LOAD_TEST_IMAGES);
 	auto t4 = Clock::now();
 
 	auto diffa = std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count();

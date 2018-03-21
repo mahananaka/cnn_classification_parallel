@@ -20,7 +20,7 @@ void  load_cifar(FOURD_VECTOR(int) &images, std::vector<int> &labels, std::vecto
 	        if(file.is_open()){
 			unsigned char lbl = 0;
 			unsigned char temp[NUM_BYTES_PER_IMAGE];
-			for(int j=0;j<num_images_per_batch;++j){
+			for(int j=0;j<1;++j){
 				if(offset+j<capacity){
 					file.read((char *)&lbl, sizeof(lbl));
 					file.read((char *)temp,sizeof(unsigned char)*NUM_BYTES_PER_IMAGE);

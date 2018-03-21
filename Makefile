@@ -1,13 +1,11 @@
 CC = g++
 CXXFLAGS = -w -Wall -g -std=c++11
-LIBS = -fopenmp 
-ICC=icc
-ICCFLAGS= -g -ltbb -std=c++11
+LIBS = -lpthread -lX11 -fopenmp 
 
-all: main omp_main
+all: main
 
 main : main.o loader.o
-	$(CC) -o $@ $(CXXFLAGS) main.o loader.o
+	$(CC) -o $@ $(CXXFLAGS) main.o loader.o $(LIBS)
 
 omp_main : main.o omp_loader.o
 	$(CC) -o $@ $(CXXFLAGS) $(LIBS) main.o omp_loader.o
