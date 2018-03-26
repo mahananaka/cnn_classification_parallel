@@ -5,7 +5,8 @@
 
 #define VECT3D(typ) std::vector<std::vector<std::vector<typ>>>
 #define VECT4D(typ) std::vector<std::vector<std::vector<std::vector<typ>>>>
-#efine SIGMOID(x) 1.0/(1.0 + exp(-1*x))
+#define SIGMOID(x) 1.0/(1.0 + exp(-1*x))
+#define DSIGMOID(x) SIGMOID(x)*(1-SIGMOID(x))
 
 #define NUM_CLASSIFICATIONS 10
 enum Classification { airplane, automobile, bird, cat, deer, dog, frog, horse, ship, truck };
