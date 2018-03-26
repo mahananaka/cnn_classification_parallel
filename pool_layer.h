@@ -1,16 +1,16 @@
-#ifndef CONVOLAYER_H_
-#define CONVOLAYER_H_
+#ifndef POOLLAYER_H_
+#define POOLLAYER_H_
 
 #include "cnnlayer.h"
 
-class ConvolutionLayer : public CnnLayer {
+class PoolLayer : public CnnLayer {
 	private:
-		VECT3D(float) kernal;
 		int num_kernals, kernal_size, stride;
+		VECT4D(float) pool_reference;
 		void apply_kernals(int b, int d, int h, int w);
 	public:
-		ConvolutionLayer(LayerAttrib &attr, int bs);
-		~ConvolutionLayer();
+		PoolLayer(LayerAttrib &attr, int bs);
+		~PoolLayer();
 		void ForwardPass(VECT4D(float) &input);
 		void BackPropagate(VECT4D(float) &deltas);
 		void PrintLayout();

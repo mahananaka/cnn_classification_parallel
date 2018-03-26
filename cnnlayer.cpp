@@ -1,13 +1,12 @@
 #include <iostream>
 #include "cnnlayer.h"
 
-CnnLayer::CnnLayer(LayerAttrib &attrib){
+CnnLayer::CnnLayer(LayerAttrib &attrib, int bs){
+	layer_type = attrib.my_type;
 	in_depth = attrib.in_depth;
 	in_height = attrib.in_height;
 	in_width = attrib.in_width;
-	kernal_size = attrib.kernal_size;
-	num_kernals = attrib.num_kernals;
-	stride = attrib.stride;
+	batch_size = bs;
 }
 
 CnnLayer::~CnnLayer(){
@@ -15,26 +14,65 @@ CnnLayer::~CnnLayer(){
 	stored_output.clear();
 }
 
-void CnnLayer::print_layout(){
-	std::cout << "id=" << in_depth << " ih=" << in_height << " iw=" << in_width << std::endl;
-	std::cout << "od=" << out_depth << " oh=" << out_height << " ow=" << out_width << std::endl;
-	std::cout << std::endl << std::endl;
-	std::cout << "ks=" << kernal_size << " nk=" << num_kernals << " str=" << stride << std::endl;
-
-	std::cout << "stored_input:" << std::endl;
-	print_3d_vector(stored_input);
-	std::cout << "stored_output:" << std::endl;
-	print_3d_vector(stored_output);
+void CnnLayer::get_output_dimensions(int &d, int &h, int &w){
+	d = out_depth;
+	h = out_height;
+	w = out_width;
 }
 
-void CnnLayer::print_3d_vector(VECT3D(int) &A){
+LayerType CnnLayer::get_layer_type(){
+	return layer_type;
+}
+
+VECT4D(float) CnnLayer::get_output(){
+	return stored_output;
+}
+
+void CnnLayer::set_targets(std::vector<float> &targets){
+	//do nothing just a dummy for a derivative class
+}
+
+void CnnLayer::print_4d_vector(VECT4D(float) &A){
+	for(int i=0;i<A.size();++i){
+		std::cout << "img " << i+1 << " of " << A.size() << std::endl;
+		for(int j=0;j<A[i].size();++j){
+			for(int k=0;k<A[i][j].size();++k){
+				for(int l=0;l<A[i][j][k].size();++l){
+					std::cout << A[i][j][k][l] << " "; 
+				}
+				std::cout << std::endl;
+			}
+			std::cout << std::endl;
+		}
+	}
+	std::cout << "------End of 4D Vector------" << std::endl << std::endl;
+}
+
+void CnnLayer::print_3d_vector(VECT3D(float) &A){
 	for(int i=0;i<A.size();++i){
 		for(int j=0;j<A[i].size();++j){
 			for(int k=0;k<A[i][j].size();++k){
-				std::cout << A[i][j][k] << " "; 
+				std::cout << A[i][j][k] << " ";
 			}
 			std::cout << std::endl;
 		}
 		std::cout << std::endl;
 	}
+	std::cout << "------End of 3D Vector------" << std::endl << std::endl;
+}
+
+void CnnLayer::print_2d_vector(std::vector<std::vector<float>> &A){
+	for(int i=0;i<A.size();++i){
+		for(int j=0;j<A[i].size();++j){
+			std::cout << A[i][j] << " ";
+		}
+		std::cout << std::endl;
+	}
+	std::cout << "------End of 2D Vector------" << std::endl << std::endl;
+}
+void CnnLayer::print_vector(std::vector<float> &A){
+	for(int i=0;i<A.size();++i){
+		std::cout << A[i] << " ";
+	}
+	std::cout << std::endl << "-----End of 1D Vector" << std::endl << std::endl;
 }

@@ -5,17 +5,20 @@
 #include "cnn.h"
 #include "loader.h"
 
-#define MAX_LOAD_TRAINER_IMAGES 2200
+#define MAX_LOAD_TRAINER_IMAGES 5
 #define MAX_LOAD_TEST_IMAGES 1000
 #define NUM_IMAGES_PER_BATCH 1000
+#define NUM_EPOCHS 1
+#define BATCH_SIZE 2
+#define LEARN_RATE 0.1
 
 typedef ConvolutionalNeuralNetwork CNN;
 typedef std::chrono::high_resolution_clock Clock;
 
 int main (int argc, char** argv)
 {
-	VECT4D(int) trainer_images, test_images;
-	std::vector<int> trainer_labels, test_labels;
+	VECT4D(float) trainer_images, test_images;
+	std::vector<float> trainer_labels, test_labels;
 	std::vector<std::string> trainer_paths { "./data/data_batch_1a.bin" };
     /*,"./data/data_batch_1b.bin",
 		"./data/data_batch_1c.bin","./data/data_batch_1d.bin","./data/data_batch_1e.bin",
@@ -47,7 +50,7 @@ int main (int argc, char** argv)
 	std::vector<std::string> test_paths { "./data/test_batch.bin" };
 	*/
 
-	//Start loading dataset
+	//###########   START LOADING DATASET   #################
 	std::cout << "Running program"<<std::endl;
 	std::cout << "Loading cifar trainer images from:" << std::endl;
 	std::cout << trainer_paths[0] << std::endl << std::endl;
@@ -67,16 +70,33 @@ int main (int argc, char** argv)
 
 	std::cout << trainer_images.size() << " trainer images and " << test_images.size() 
 		<< " test image have been loaded" << std::endl;
-	//Finished loading dataset
+	//##########   FINISHED LOADING DATASET   #############
 	
-	//Configure CNN Layers
-	//LayerAttrib { type, kernal_size, stride, depth, height, width }
+	/*
+	* Configure CNN Layers
+	* The first layer must have all values defined, but the following layers can auto determine
+	* their input based on the previous layers output. Final layer must be type fc.
+	* LayerAttrib { type, kernal_size, stride, depth=-1, height=-1, width=-1 }
+	*/
 	std::vector<LayerAttrib> my_layers;
 	my_layers.push_back(LayerAttrib { convolution, 2, 5, 1, 3, 32, 32});
-	my_layers.push_back(LayerAttrib { convolution, 2, 5, 2, 6, 28, 28});
+	my_layers.push_back(LayerAttrib { pool, 1, 2, 2});
+	my_layers.push_back(LayerAttrib { convolution, 2, 5, 1});
+	my_layers.push_back(LayerAttrib { pool, 1, 2, 2});
+	my_layers.push_back(LayerAttrib { fc, 1, 1, 1 });
 
-	CNN my_cnn(my_layers);
-	my_cnn.dump_cnn();
+	CNN* my_cnn;
+	try{
+		my_cnn = new CNN(my_layers, NUM_EPOCHS, BATCH_SIZE, LEARN_RATE);
+	}catch(int eno){
+		std::cout << "Failure: exiting.... " << std::endl;
+		return eno;
+	}
+
+	my_cnn->train(trainer_images,trainer_labels);
+
+	//my_cnn->dump_cnn();
+	my_cnn->print_layer(4);
 
 	//Clear memory
 	trainer_images.clear();
@@ -86,5 +106,6 @@ int main (int argc, char** argv)
 
 	//Statement to let us know we exited without any error
 	std::cout << "\nExiting program"<<std::endl;
+	delete my_cnn;
 	return 0;
 }
